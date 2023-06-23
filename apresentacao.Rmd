@@ -9,23 +9,22 @@ output:
   ioslides_presentation:
     highlight: pygments
     widescreen: TRUE
+    incremental: true
+    transition: faster
+    css: "custom2.css"
 
-format:
-  html:
-    theme: 
-      - litera
-      - custom.scss
+  
 ---
 
 
-# Nova Seção
+# Nova Seção {data-background=#C1D6DB}
 
 
-## Novo Slide {data-background=#00B9E3}
+## Novo Slide 
 
 - O texto em cada slide é incluído assim como um arquivo `rmarkdown` usual.
 
-- VocÃª pode usar *texto em itálico* ou **em negrito**.
+- Você pode usar *texto em itálico* ou **em negrito**.
 
 - Para mudar a cor, é preciso usar [código html](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html#text-color):
 
@@ -39,11 +38,11 @@ $$ \bar{X} = \sum_{i=1}^n \frac{X_i}{n} $$
 
 ## Código em R 
 
-- VocÃªs irÃ£o entregar apenas <span class="red3">**1 (um) arquivo .Rmd**</span>, que deverá incluir tanto o conteúdo da apresentação, como todo o código para executar as análises.
+- Vocês irão entregar apenas <span class="red3">**1 (um) arquivo .Rmd**</span>, que deverá incluir tanto o conteúdo da apresentação, como todo o código para executar as análises.
 
-- O código deve ser incluído usando os *chunks* como vocÃªs já estão acostumados. 
+- O código deve ser incluído usando os *chunks* como vocês já estão acostumados. 
 
-- Lembre-se de usar as opções como `echo=FALSE`, `message=FALSE`, `warning=FALSE` quando vocÃªs nÃ£o quiserem mostrar o código e as mensagens de erro nos slides. 
+- Lembre-se de usar as opções como `echo=FALSE`, `message=FALSE`, `warning=FALSE` quando vocẽs não quiserem mostrar o código e as mensagens de erro nos slides. 
 
 - Para mais detalhes sobre opções de *chunk*: <https://rmarkdown.rstudio.com/lesson-3.html>
 
@@ -65,3 +64,5 @@ plot(1:10,1:10, pch=1:10, col=1:10)
 - Ou me procure: [thaispaiva@est.ufmg.br](mailto:thaispaiva@est.ufmg.br).
 
   
+  
+  # Nova seção  {data-background=#C1D6DB}

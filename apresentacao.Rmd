@@ -15,9 +15,91 @@ output:
 
   
 ---
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(tidyverse)
+if(!require(ggthemes)){install.packages("ggthemes");library(ggthemes)}
+if(!require(gt)){install.packages("gt");library(gt)}
+library(RColorBrewer)
+library(CASdatasets)
+tema <- theme_hc()+ theme(axis.title.y = element_text(angle = 90,
+                                                      margin = margin(0.1, 0.5, 0.3, 0, "cm")),
+                          legend.position = "right",
+                          plot.margin = margin(0.2, 0.3, 0.3, 0.3, "cm"))
+theme_set(tema)
+
+data(ustermlife)
+
+dados <- ustermlife
 
 
-# Nova Seção {data-background=#C1D6DB}
+?ustermlife
+
+str(dados)
+
+```
+
+
+
+#  Banco de dados {data-background=#C1D6DB}
+
+## Banco de dados
+
+                  sdkjnsadas    
+
+# Objetivos {data-background=#C1D6DB}
+
+## Objetivos
+
+- skhdkshdlais
+- diuahsduhausk
+
+- dushdasdkjsadjasbdskjdbjkasbdkjsab
+
+# Análise descritiva {data-background=#C1D6DB}
+
+## Análise descritiva
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+dados %>%  ggplot()+
+  geom_bar(aes(x = as.factor(Gender), y = Age, fill= as.factor(Ethnicity)), 
+           stat="identity", position=position_dodge()) +
+  labs(x = "Gênero", y = "Idade", title = "Idade X Sexo X Etnia")+
+  scale_fill_manual(name="Etnia",labels=c("1", "2", "3", "7"), 
+                    values = c("#D7484A", "#A1C6CF", "#323C56", "#D78763"))+
+  scale_x_discrete(labels=c("0" = "X", "1" ="Y"))
+
+
+```
+
+
+# Modelagem {data-background=#C1D6DB}
+
+## Modelagem 
+
+-dksndkuajs
+-uygdytsfdatsvdvas
+- sdyabsdhabsjd
+
+
+# Conclusões {data-background=#C1D6DB}
+
+## Conclusões
+
+- O texto em cada slide é incluído assim como um arquivo `rmarkdown` usual.
+
+- Você pode usar *texto em itálico* ou **em negrito**.
+
+- Para mudar a cor, é preciso usar [código html](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html#text-color):
+
+  - <span class="blue3">Azul</span>, <span class="red">vermelho</span>, <span class="green2">verde</span>, <span class="black">preto</span>, <span class="yellow3">amarelo</span>.
+  
+
+ - **Fórmulas** podem ser incluídas usando Latex: $\sigma^2$ (na mesma linha do texto), ou em destaque
+
+$$ \bar{X} = \sum_{i=1}^n \frac{X_i}{n} $$
+
+
 
 
 ## Novo Slide 

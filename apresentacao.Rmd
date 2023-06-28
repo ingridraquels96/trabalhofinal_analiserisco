@@ -57,7 +57,15 @@ str(dados)
 
 # Análise descritiva {data-background=#C1D6DB}
 
-## Análise descritiva
+## Análise da variável resposta "Face"
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(fitdistrplus)
+denscomp(fitdist(log(dados$Face), "norm"), legendtext=c("Curva normal ajustada"), demp=T,
+         main="Histograma e densidades ajustadas", xlegend=7, ylegend=0.2)
+```
+
+## Análise descritiva das variáveis explicativas
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -71,7 +79,6 @@ dados %>%  ggplot()+
 
 
 ```
-
 
 # Modelagem {data-background=#C1D6DB}
 

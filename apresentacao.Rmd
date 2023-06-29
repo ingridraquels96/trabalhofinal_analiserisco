@@ -44,12 +44,13 @@ str(dados)
 
 ## Banco de dados
 
-                  sdkjnsadas    
+O banco de dados se trata de uma amostra representativa dos EUA que contém informações sobre consumidores e potenciais consumidores de seguros de vida. As informações foram obtidas de uma amostra aleatória de 500 agregados familiares, a partir do Questionário de Finanças dos Consumidores (SCF) realizado em 2004.  
 
 # Objetivos {data-background=#C1D6DB}
 
 ## Objetivos
 
+- Estudamos como o valor da variável FACE, o montante que a empresa pagará em caso de morte do segurado nomeado, é afetada por outras variáveis determinantes do consumidor.
 - skhdkshdlais
 - diuahsduhausk
 
@@ -84,16 +85,68 @@ dados %>%  ggplot()+
 
 ## Modelagem 
 
--dksndkuajs
--uygdytsfdatsvdvas
-- sdyabsdhabsjd
+Vimos que a variável FACE possui distribuição Normal quando transformada com o log(). Por este motivo usaremos, a princípio, um modelo Gaussiano para o log da variável FACE. Também aplicamos log à variável Income, a fim de controle de escala.
 
+```{r}
+ajuste_logNorm <- glm(log(Face)~factor(Gender)+factor(MarStat)
+                      +idade2+ sidade2+ Education+ Seducation +(NumHH)
+                      +log(Income)+ (Charity),
+                      data = base_LI, family = gaussian(link = "identity"))
+summary(ajuste_logNorm)
+```
 
-# Conclusões {data-background=#C1D6DB}
+Vimos que as variáveis *idade2*, sidade2, Seducation e MarStat **não foram significativas** para o modelo.
+
+```{r}
+ajuste_logNorm <- glm(log(Face)~factor(Gender)
+                      + Education +(NumHH)
+                      +log(Income)+ (Charity),
+                      data = base_LI, family = gaussian(link = "identity"))
+summary(ajuste_logNorm)
+```
+
+Testando multicolinearidade entre as explicativas:
+
+```{r}
+library(car)
+vif(ajuste_logNorm)
+```
+
+Talvez se adicionarmos termos de interação entre explicativas o problema seja resolvido. Isso irá ocorrer se a relação entre as explicativas não for linear.
+
+```{r}
+
+```
+
+Testando novamente a existência de multicolinearidade:
+
+```{r}
+library(car)
+vif(ajuste_logNorm)
+```
+
+Testamos também com o modelo Gamma, sem transformação da variável resposta, e constatamos uma Deviance e BIC menores.
+
+```{r}
+ajuste_gamma <- glm(Face~factor(Gender)
+                      + Education +(NumHH)
+                      +log(Income)+ (Charity),
+                    data = base_LI, family = Gamma(link = "log"))
+summary(ajuste_gamma)
+```
+
+Comparando BIC:
+
+```{r}
+BIC(ajuste_logNorm)
+BIC(ajuste_gamma)
+```
+
+# Conclusões {data-background="#C1D6DB"}
 
 ## Conclusões
 
-- O texto em cada slide é incluído assim como um arquivo `rmarkdown` usual.
+-   Vimos que a variável FACE, o valor da indenização do seguro de vida pago pela empresa, pode ser explicado por características do segurado. Dentre elas, o número de pessoas vivendo na casa, o log da renda do segurado, o número de anos de educação do segurado e o valor das contribuições do segurado para a caridade. Também vimos que o modelo Gamma foi o melhor.
 
 - Você pode usar *texto em itálico* ou **em negrito**.
 

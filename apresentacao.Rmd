@@ -196,9 +196,9 @@ Testando multicolinearidade entre as explicativas:
 vif(ajuste_logNorm)
 ```
 
-Talvez se ostermos de interação entre explicativas forem adicionados, o problema seja resolvido. Isso irá ocorrer se a relação entre as explicativas não for linear.
+Talvez adicionar os termos de interação entre explicativas sejam uma solução para o problema. Isso irá ocorrer se a relação entre as explicativas não for linear.
 
-Teste spara verificação da existência de multicolinearidade:
+Teste para verificação da existência de multicolinearidade:
 
 ```{r message=FALSE, warning=FALSE}
 vif(ajuste_logNorm)
@@ -225,6 +225,15 @@ Comparando BIC:
 BIC(ajuste_logNorm)
 BIC(ajuste_gamma)
 ```
+
+## Modelagem
+
+Comparando curvas Normal e Gamma para log da Face:
+
+```{r message=FALSE, warning=FALSE}
+denscomp(list(fitdist(log(dados$Face), "lnorm"), fitdist(log(dados$Face), "gamma")), legendtext=c("Normal ajustada", "Gamma ajustada"), fitcol = c("blue", "orangered"), fitlty= c(3, 1), demp=T, main="Histograma do log de 'Face' e densidades ajustadas", xlegend=7, ylegend=0.2)
+```
+
 
 # Conclusões {data-background="#C1D6DB"}
 

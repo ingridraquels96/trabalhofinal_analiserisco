@@ -499,20 +499,13 @@ summary(ajuste_logNorm)
 
 ## Modelagem
 
-Testando multicolinearidade entre as explicativas:
+Testando multicolinearidade entre as explicativas (FIV>10):
 
 ```{r message=FALSE, warning=FALSE}
 vif(ajuste_logNorm)
+barplot(vif(ajuste_logNorm), main = "VIF Values", col = "#D78763")
+abline(h = 10, lwd = 3, lty = 2)
 ```
-
-Talvez se ostermos de interação entre explicativas forem adicionados, o problema seja resolvido. Isso irá ocorrer se a relação entre as explicativas não for linear.
-
-Teste spara verificação da existência de multicolinearidade:
-
-```{r message=FALSE, warning=FALSE}
-vif(ajuste_logNorm)
-```
-
 
 ## Modelagem
 

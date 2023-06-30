@@ -21,6 +21,10 @@ if(!require(ggthemes)){install.packages("ggthemes");library(ggthemes)}
 if(!require(gt)){install.packages("gt");library(gt)}
 library(RColorBrewer)
 library(CASdatasets)
+library(MASS)
+library(fitdistrplus)
+library(car)
+library(gridExtra)
 tema <- theme_hc()+ theme(axis.title.y = element_text(angle = 90,
                                                       margin = margin(0.1, 0.5, 0.3, 0, "cm")),
                           legend.position = "right",
@@ -31,10 +35,24 @@ data(ustermlife)
 
 dados <- ustermlife
 
+dados$Face[dados$Face==0] <- NA
 
-?ustermlife
+dados <- dados %>% drop_na() 
 
-str(dados)
+
+
+dados$idade2 <- cut(dados$Age, breaks = 7)
+
+dados$sidade2 <- cut(dados$Sage, breaks = 7)
+
+
+
+dados$educacao <- cut(dados$Education, breaks = 4)
+
+
+dados$Ceducacao <- cut(dados$Seducation, breaks = 3)
+
+base_LI <- dados
 
 ```
 
@@ -44,33 +62,61 @@ str(dados)
 
 ## Banco de dados
 
-O banco de dados se trata de uma amostra representativa dos EUA que contém informações sobre consumidores e potenciais consumidores de seguros de vida. As informações foram obtidas de uma amostra aleatória de 500 agregados familiares, a partir do Questionário de Finanças dos Consumidores (SCF) realizado em 2004.  
+O banco de dados se trata de uma amostra representativa dos EUA que contém informações sobre consumidores e potenciais consumidores de seguros de vida. As informações foram obtidas de uma amostra aleatória de 500 agregados familiares, a partir do Questionário de Finanças dos Consumidores (SCF) realizado em 2004. 
+
+São 18 variáveis e 500 observações originalmente.
 
 # Objetivos {data-background=#C1D6DB}
 
 ## Objetivos
 
-- Estudamos como o valor da variável FACE, o montante que a empresa pagará em caso de morte do segurado nomeado, é afetada por outras variáveis determinantes do consumidor.
-- skhdkshdlais
-- diuahsduhausk
+- Entender o comportamento e distribuição das variáveis do banco de dados;
+- Estudar como o valor da variável FACE, o montante que a empresa pagará em caso de morte do segurado nomeado, é afetada por outras variáveis determinantes do consumidor.
 
-- dushdasdkjsadjasbdskjdbjkasbdkjsab
 
 # Análise descritiva {data-background=#C1D6DB}
 
+## Divisão das análises descritivas
+
+<span style="color:#323C56">**Dados do consumidor:** </span>
+\
+- *Gender*, *Age*, *MarStat*, *Education*, *Ethnicity*.
+
+\
+
+<span style="color:#323C56">**Dados do cônjuge:**</span>
+\
+- *SmarStat*, *Sgender*, *Sage*, *Seducation*.
+
+\
+
+<span style="color:#323C56">**Dados de renda:**</span>
+\
+- *NumHH*, *Income*, *TotIncome*, *Charity*
+
 ## Análise da variável resposta "Face"
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.align='center',message=FALSE, warning=FALSE, fig.heigth=4, fig.width=7}
+dados$Face[dados$Face==0] <- NA
+
+dados <- dados %>% drop_na() 
+
+
 library(fitdistrplus)
 denscomp(fitdist(log(dados$Face), "norm"), legendtext=c("Curva normal ajustada"), demp=T,
-         main="Histograma e densidades ajustadas", xlegend=7, ylegend=0.2)
+         main="Histograma do log de 'Face' e densidades ajustadas", xlegend=7, ylegend=0.2)
+
 ```
 
+- ijsoiadjas dsjndisnd djsndajk dasjndjkasn dsdnkaj
+
+
 ## Análise descritiva das variáveis explicativas
+<span style="color:#323C56">**Dados do consumidor:** </span>
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.align='center',message=FALSE, warning=FALSE, fig.heigth=4, fig.width=10}
 
-dados %>%  ggplot()+
+p1 <- dados %>%  ggplot()+
   geom_bar(aes(x = as.factor(Gender), y = Age, fill= as.factor(Ethnicity)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Gênero", y = "Idade", title = "Idade X Sexo X Etnia")+
@@ -78,16 +124,50 @@ dados %>%  ggplot()+
                     values = c("#D7484A", "#A1C6CF", "#323C56", "#D78763"))+
   scale_x_discrete(labels=c("0" = "X", "1" ="Y"))
 
+p2 <- dados %>% 
+  ggplot()+
+  geom_point(aes(x = TotIncome, y = Face, color= as.factor(Gender))) +
+  labs(x = "Renda",
+       y = "Valor do seguro",
+       title = "Gráfico de dispersão do valor do seguro pela renda total e gênero do segurado")+
+  scale_color_manual(name="Gênero",
+                    values = c("#D7484A", "#A1C6CF"))
+
+grid.arrange(p1, p2, ncol = 2)
 
 ```
+- sdjnaosndlkasndlkas
+- dosjdoaid
+
+## Análise descritiva das variáveis explicativas
+<span style="color:#323C56">**Dados do cônjuge:** </span>
+
+```{r}
+
+```
+
+
+## Análise descritiva das variáveis explicativas
+
+<span style="color:#323C56">**Dados de renda:** </span>
+
+
+```{r}
+
+```
+
 
 # Modelagem {data-background=#C1D6DB}
 
 ## Modelagem 
 
-Vimos que a variável FACE possui distribuição Normal quando transformada com o log(). Por este motivo usaremos, a princípio, um modelo Gaussiano para o log da variável FACE. Também aplicamos log à variável Income, a fim de controle de escala.
+- A variável FACE possui *aproximadamente* distribuição Normal quando transformada com o log(). Por este motivo usou-se, a princípio, um modelo Gaussiano para o log da variável FACE. 
+- Testou-se a  aplicação log à variável Income, a fim de controle de escala.
+- O modelo Gamma também foi testado, **sem** transformação da variável resposta
 
-```{r}
+## Modelagem
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 ajuste_logNorm <- glm(log(Face)~factor(Gender)+factor(MarStat)
                       +idade2+ sidade2+ Education+ Seducation +(NumHH)
                       +log(Income)+ (Charity),
@@ -95,9 +175,12 @@ ajuste_logNorm <- glm(log(Face)~factor(Gender)+factor(MarStat)
 summary(ajuste_logNorm)
 ```
 
-Vimos que as variáveis *idade2*, sidade2, Seducation e MarStat **não foram significativas** para o modelo.
 
-```{r}
+## Modelagem
+
+Observou-se que as variáveis *idade2*, sidade2, Seducation e MarStat *não foram significativas* para o modelo.
+
+```{r message=FALSE, warning=FALSE}
 ajuste_logNorm <- glm(log(Face)~factor(Gender)
                       + Education +(NumHH)
                       +log(Income)+ (Charity),
@@ -105,29 +188,28 @@ ajuste_logNorm <- glm(log(Face)~factor(Gender)
 summary(ajuste_logNorm)
 ```
 
+## Modelagem
+
 Testando multicolinearidade entre as explicativas:
 
-```{r}
-library(car)
+```{r message=FALSE, warning=FALSE}
 vif(ajuste_logNorm)
 ```
 
-Talvez se adicionarmos termos de interação entre explicativas o problema seja resolvido. Isso irá ocorrer se a relação entre as explicativas não for linear.
+Talvez se ostermos de interação entre explicativas forem adicionados, o problema seja resolvido. Isso irá ocorrer se a relação entre as explicativas não for linear.
 
-```{r}
+Teste spara verificação da existência de multicolinearidade:
 
-```
-
-Testando novamente a existência de multicolinearidade:
-
-```{r}
-library(car)
+```{r message=FALSE, warning=FALSE}
 vif(ajuste_logNorm)
 ```
 
-Testamos também com o modelo Gamma, sem transformação da variável resposta, e constatamos uma Deviance e BIC menores.
 
-```{r}
+## Modelagem
+
+O ajuste da Gamma obteve uma Deviance e BIC menores.
+
+```{r message=FALSE, warning=FALSE}
 ajuste_gamma <- glm(Face~factor(Gender)
                       + Education +(NumHH)
                       +log(Income)+ (Charity),
@@ -135,9 +217,11 @@ ajuste_gamma <- glm(Face~factor(Gender)
 summary(ajuste_gamma)
 ```
 
+## Modelagem
+
 Comparando BIC:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 BIC(ajuste_logNorm)
 BIC(ajuste_gamma)
 ```
@@ -146,65 +230,9 @@ BIC(ajuste_gamma)
 
 ## Conclusões
 
--   Vimos que a variável FACE, o valor da indenização do seguro de vida pago pela empresa, pode ser explicado por características do segurado. Dentre elas, o número de pessoas vivendo na casa, o log da renda do segurado, o número de anos de educação do segurado e o valor das contribuições do segurado para a caridade. Também vimos que o modelo Gamma foi o melhor.
-
-- Você pode usar *texto em itálico* ou **em negrito**.
-
-- Para mudar a cor, é preciso usar [código html](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html#text-color):
-
-  - <span class="blue3">Azul</span>, <span class="red">vermelho</span>, <span class="green2">verde</span>, <span class="black">preto</span>, <span class="yellow3">amarelo</span>.
-  
-
- - **Fórmulas** podem ser incluídas usando Latex: $\sigma^2$ (na mesma linha do texto), ou em destaque
-
-$$ \bar{X} = \sum_{i=1}^n \frac{X_i}{n} $$
+-   Assim observa-se que a variável FACE, o valor da indenização do seguro de vida pago pela empresa, pode ser explicado por características do segurado. Dentre elas, o número de pessoas vivendo na casa, o log da renda do segurado, o número de anos de educação do segurado e o valor das contribuições do segurado para a caridade. Observa-se também, que o modelo Gamma foi o melhor.
 
 
 
 
-## Novo Slide 
 
-- O texto em cada slide é incluído assim como um arquivo `rmarkdown` usual.
-
-- Você pode usar *texto em itálico* ou **em negrito**.
-
-- Para mudar a cor, é preciso usar [código html](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html#text-color):
-
-  - <span class="blue3">Azul</span>, <span class="red">vermelho</span>, <span class="green2">verde</span>, <span class="black">preto</span>, <span class="yellow3">amarelo</span>.
-  
-
- - **Fórmulas** podem ser incluídas usando Latex: $\sigma^2$ (na mesma linha do texto), ou em destaque
-
-$$ \bar{X} = \sum_{i=1}^n \frac{X_i}{n} $$
-
-
-## Código em R 
-
-- Vocês irão entregar apenas <span class="red3">**1 (um) arquivo .Rmd**</span>, que deverá incluir tanto o conteúdo da apresentação, como todo o código para executar as análises.
-
-- O código deve ser incluído usando os *chunks* como vocês já estão acostumados. 
-
-- Lembre-se de usar as opções como `echo=FALSE`, `message=FALSE`, `warning=FALSE` quando vocẽs não quiserem mostrar o código e as mensagens de erro nos slides. 
-
-- Para mais detalhes sobre opções de *chunk*: <https://rmarkdown.rstudio.com/lesson-3.html>
-
-
-## Gráficos
-
-- Para incluir um gráfico, coloque o código em um chunk separado, e use as opções `fig.align='center'` para centralizar, e `fig.width` e `fig.height` para controlar o tamanho (default é 7).
-
-```{r echo=FALSE, fig.align='center', fig.heigth=3, fig.width=5}
-plot(1:10,1:10, pch=1:10, col=1:10)
-```
-
-
-## Para mais detalhes
-
-- <https://rmarkdown.rstudio.com/ioslides_presentation_format.html>
-
-
-- Ou me procure: [thaispaiva@est.ufmg.br](mailto:thaispaiva@est.ufmg.br).
-
-  
-  
-  # Nova seção  {data-background=#C1D6DB}

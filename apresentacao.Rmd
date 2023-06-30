@@ -1,6 +1,6 @@
 ---
 title: "Métodos Computacionais para Análise de Risco"
-author: 'Prof.: Thais Paiva'
+author: 'Ingrid Silva e Nathan Bossi'
 
 date: "30 de junho de 2023"
 subtitle: "Apresentação Trabalho Final"
@@ -80,18 +80,21 @@ São 18 variáveis e 500 observações originalmente.
 
 <span style="color:#323C56">**Dados do consumidor:** </span>
 \
+
 - *Gender*, *Age*, *MarStat*, *Education*, *Ethnicity*.
 
 \
 
 <span style="color:#323C56">**Dados do cônjuge:**</span>
 \
+
 - *SmarStat*, *Sgender*, *Sage*, *Seducation*.
 
 \
 
 <span style="color:#323C56">**Dados de renda:**</span>
 \
+
 - *NumHH*, *Income*, *TotIncome*, *Charity*
 
 ## Análise da variável resposta "Face"
@@ -110,9 +113,24 @@ denscomp(fitdist(log(dados$Face), "norm"), legendtext=c("Curva normal ajustada")
 
 - Com o log da variável *Face* o comportamento se assemelhou a uma distribuição normal.
 
+## Análise descritiva das variáveis explicativas
+<span style="color:#323C56">**Dados do consumidor:** </span>
+
+```{r, fig.align='center',message=FALSE, warning=FALSE, fig.heigth=4, fig.width=10}
+table(dados$Gender)
+
+table(dados$Gender, dados$Ethnicity)
+
+table(dados$Gender, dados$MarStat)
+
+table(dados$NumHH, dados$Gender)
+   
+
+```
+
 
 ## Análise descritiva das variáveis explicativas
-<span style="color:#323C56">**Dados do consumidor: gênero e etnia** </span>
+<span style="color:#323C56">**Dados do consumidor: gênero** </span>
 
 ```{r echo=FALSE, fig.align='center',message=FALSE, warning=FALSE, fig.heigth=4, fig.width=10}
 
@@ -121,7 +139,7 @@ p1 <- dados %>%
   geom_bar(aes(x = as.factor(Gender), y = Face, fill = as.factor(Gender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Gênero",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -132,7 +150,7 @@ p2 <- dados %>%
   ggplot()+
   geom_boxplot(aes(x = as.factor(Gender), y = Face, fill = as.factor(Gender)))+
     labs(x = "Gênero",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   ylim(0, 2.e+6)+
   scale_fill_manual(name="Gênero",
@@ -152,7 +170,7 @@ p1 <- dados %>%
   geom_bar(aes(x = Age, y = Face, fill = as.factor(Gender)), 
            stat="identity", position = position_stack()) +
   labs(x = "Idade",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -164,7 +182,7 @@ p2 <- dados %>%
   geom_bar(aes(x = idade2, y = Face, fill = as.factor(Gender)), 
            stat="identity", position = position_stack()) +
   labs(x = "Idade",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -186,7 +204,7 @@ p1 <- dados %>%
   geom_bar(aes(x = Education, y = Face, fill = as.factor(Gender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Anos de educacao",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -197,7 +215,7 @@ p2 <- dados %>%
   geom_bar(aes(x = educacao, y = Face, fill = as.factor(Gender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Anos de educação",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -218,7 +236,7 @@ p1 <- dados %>%
   geom_bar(aes(x = as.factor(MarStat), y = Face, fill = as.factor(Gender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Estado Civil",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="SGênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -229,7 +247,7 @@ p2 <- dados %>%
   geom_bar(aes(x = as.factor(Gender), y = Face, fill = as.factor(Ethnicity)), 
              stat="identity", position=position_stack()) +
   labs(x = "Gênero",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Etnia",
                     values = c("#D7484A", "#A1C6CF", "#323C56", "#D78763"))+
@@ -249,7 +267,7 @@ p1 <- dados %>%
   geom_bar(aes(x = as.factor(Sgender), y = Face, fill = as.factor(Sgender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Gênero do cônjuge",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF", "#D78763"))+
@@ -261,7 +279,7 @@ p2 <- dados %>%
   geom_bar(aes(x = as.factor(SmarStat), y = Face, fill = as.factor(SmarStat)), 
              stat="identity", position=position_stack()) +
   labs(x = "Estado civil",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Estado civil",
                     values = c("#D7484A", "#A1C6CF", "#323C56", "#D78763"))+
@@ -281,7 +299,7 @@ p1 <- dados %>%
   geom_bar(aes(x = Sage, y = Face, fill = as.factor(Sgender)), 
            stat="identity", position = position_stack()) +
   labs(x = "Idade",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF", "#D78763"))+
@@ -293,7 +311,7 @@ p2 <- dados %>%
   geom_bar(aes(x = sidade2, y = Face, fill = as.factor(Sgender)), 
            stat="identity", position = position_stack()) +
   labs(x = "Idade",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF", "#D78763"))+
@@ -315,7 +333,7 @@ p1 <- dados %>%
   geom_bar(aes(x = Seducation, y = Face, fill = as.factor(Sgender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Anos de educacao",
-       y = "Face",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF", "#D78763"))+
@@ -326,7 +344,7 @@ p2 <- dados %>%
   geom_bar(aes(x = Ceducacao, y = Face, fill = as.factor(Sgender)), 
            stat="identity", position=position_dodge()) +
   labs(x = "Anos de educação",
-       y = "Face",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF", "#D78763"))+
@@ -351,7 +369,7 @@ p1 <- dados %>%
   geom_bar(aes(x = as.factor(NumHH), y = Face, fill = as.factor(Gender)), 
            stat="identity", position=position_stack()) +
   labs(x = "Número de moradores da casa",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   scale_fill_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -362,7 +380,7 @@ p2 <- dados %>%
   ggplot()+
   geom_boxplot(aes(x = as.factor(NumHH), y = Face, fill = as.factor(Gender)))+
     labs(x = "Numero de moradores da casa",
-       y = "Valor seguro",
+       y = "Indenização",
        title = "")+
   ylim(0, 2.e+6)+
   scale_fill_manual(name="Gênero",
@@ -381,7 +399,7 @@ p1 <- dados %>%
   ggplot(aes(x = Income, y = Face, color= as.factor(Gender)))+
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
   labs(x = "Renda",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                      values = c("#D7484A", "#A1C6CF"))
@@ -391,9 +409,9 @@ p1 <- dados %>%
 p2 <- dados %>% 
   ggplot(aes(x = Income, y = Face, color= as.factor(Gender)))+
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
-  geom_smooth(method = lm, , se = FALSE)+
+  geom_smooth(method = lm, se = FALSE)+
   labs(x = "Renda",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -412,7 +430,7 @@ p1 <- dados %>%
   ggplot(aes(x = TotIncome, y = Face, color= as.factor(Gender)))+
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
   labs(x = "Renda total",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                      values = c("#D7484A", "#A1C6CF"))
@@ -424,7 +442,7 @@ p2 <- dados %>%
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
   geom_smooth(method = lm, , se = FALSE)+
   labs(x = "Renda total",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
@@ -444,7 +462,7 @@ p1 <- dados %>%
   ggplot(aes(x = Income, y = Face, color= as.factor(Gender)))+
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
   labs(x = "Doação para a caridade",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                      values = c("#D7484A", "#A1C6CF"))
@@ -456,7 +474,7 @@ p2 <- dados %>%
   geom_point(aes(x = Income, y = Face, color= as.factor(Gender)))+
   geom_smooth(method = lm, , se = FALSE)+
   labs(x = "Doação para a caridade",
-       y = "Valor do seguro",
+       y = "Indenização",
        title = "")+
   scale_color_manual(name="Gênero",
                     values = c("#D7484A", "#A1C6CF"))+
